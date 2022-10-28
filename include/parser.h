@@ -6,8 +6,8 @@
 
 class Parser {
 	Lexer& m_lexer;
-    TokenVariant m_current_token;   
-    TokenVariant& getNextToken();
+    Token m_current_token;   
+    Token& getNextToken();
 
 public:
     Parser(Lexer& lexer);

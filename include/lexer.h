@@ -9,5 +9,5 @@ class Lexer {
 		
 	public:
 		Lexer(std::istream& stream);
-		const TokenVariant getToken();
+		const Token getToken();
 };

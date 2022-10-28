@@ -1,8 +1,49 @@
 #pragma once
+#include <sys/types.h>
 #include <variant>
 #include <string>
 #include "types.h"
 
+class Token {
+public:
+	enum class Type {
+		EndOfFile,
+		Integer,
+		Float,
+		Identifier,
+		Keyword,
+		Atom,
+		What
+	};
+
+	enum class Keyword {
+		Define,
+		Extern
+	};
+
+	Token() = delete;
+	Token(Type type);
+	Token(char atom);
+	Token(f64 decimal);
+	Token(i64 integer);
+	Token(Keyword keyword);
+	Token(const std::string& identifier);
+
+	Type getType() const;
+	bool matchAtom(char atom);
+	bool matchKeyword(Keyword keyword);
+
+	bool getValue(f64& decimal);
+	bool getValue(i64& integer);
+	bool getValue(std::string& identifier);
+
+private:
+	Type m_type;
+	std::variant<char, f64, i64, std::string, Keyword> m_data;
+};
+
+
+/*
 struct Token {
 	enum class KeywordEnum : u32 {
 		DEFINE,
@@ -30,4 +71,4 @@ using TokenVariant = std::variant<
 	Token::Keyword, 
 	Token::Identifier,
 	Token::Atom
->;
+>; */

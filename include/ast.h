@@ -11,10 +11,10 @@ class ExprAST {
 };
 
 class NumberValAST : public ExprAST {
-	f64 m_value;
+	i64 m_value;
 
 public:
-	NumberValAST(f64 value);
+	NumberValAST(i64 value);
 };
 
 

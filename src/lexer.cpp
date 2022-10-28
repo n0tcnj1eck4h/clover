@@ -32,11 +32,11 @@ Lexer::Lexer(std::istream& stream) : stream(stream) {};
 //}
 
 
-const TokenVariant Lexer::getToken() {
+const Token Lexer::getToken() {
     // Skip whitespace
     while(std::isspace(stream.peek())) stream.get();
 
-    if(stream.peek() == std::char_traits<char>::eof()) return Token::EndOfFile{ };
+    if(stream.peek() == std::char_traits<char>::eof()) return Token(Token::Type::EndOfFile);
 
     // Skip comments
     if(stream.peek() == '#') {
@@ -48,7 +48,7 @@ const TokenVariant Lexer::getToken() {
     switch(stream.peek()) {
         case '(':
         case ')':
-            return Token::Atom { (Token::AtomEnum)stream.get() };
+            return Token((char)stream.peek());
     }
 
     // Identifiers start with a letter or '_'
@@ -58,25 +58,27 @@ const TokenVariant Lexer::getToken() {
             temp += stream.get();
         }
 
-        if(temp == "def")    return Token::Keyword { Token::KeywordEnum::DEFINE };
-        if(temp == "extern") return Token::Keyword { Token::KeywordEnum::EXTERN };
+        if(temp == "def")    return Token(Token::Keyword::Define);
+        if(temp == "extern") return Token(Token::Keyword::Extern);
 
-        return Token::Identifier{ std::move(temp) };
+        return Token( std::move(temp) );
     }
 
     // Numeric literals start with a number
     if(std::isdigit(stream.peek())) {
         f64 value;
-        if(stream >> value) return Token::Number{ value };
+        if(stream >> value) return Token(value);
         else {
-            stream.clear();
-            std::string temp;
-            stream >> temp;
-            return Token::Unexpected{ std::move(temp) };
+		throw;
+            // stream.clear();
+            // std::string temp;
+            // stream >> temp;
+            // return Token::Unexpected{ std::move(temp) };
         }
     }
+	throw;
 
-    std::string temp;
-    stream >> temp;
-    return Token::Unexpected{ std::move(temp) };
+    // std::string temp;
+    // stream >> temp;
+    // return Token::Unexpected{ std::move(temp) };
 }

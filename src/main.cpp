@@ -11,8 +11,9 @@ int main(int argc, const char** argv) {
    Lexer lexer(std::cin);
 
     while(true) {
-        TokenVariant token = lexer.getToken();
-	std::visit(overloaded { 
+        Token token = lexer.getToken();
+	std::cout << "Token type: " << (u32)token.getType() << std::endl;
+	/*std::visit(overloaded { 
 		[](Token::EndOfFile& )   { std::cout << "End of file." << std::endl; },
 		[](Token::Unexpected& u) { std::cout << "Unexpected identifier: " << u.token << std::endl; },
 		[](Token::Number& n)     { std::cout << "Number: " << n.value << std::endl; },
@@ -21,7 +22,7 @@ int main(int argc, const char** argv) {
 		[&](auto& )              { std::cout << "Unhandled Token ID: " << token.index() << std::endl; }
 	}, token);
 
-	if(std::get_if<Token::EndOfFile>(&token)) break;
+	if(std::get_if<Token::EndOfFile>(&token)) break;*/
     }
 
 	return 0;
