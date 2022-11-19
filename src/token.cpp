@@ -32,6 +32,16 @@ bool Token::getValue(f64& decimal) {
 	return false;
 }
 
+bool Token::getValue(char& atom) {
+	auto v = std::get_if<char>(&m_data);
+	if(v) {
+		atom = *v;
+		return true;
+	} 
+
+	return false;
+}
+
 bool Token::getValue(i64& integer) {
 	auto v = std::get_if<i64>(&m_data);
 	if(v) {

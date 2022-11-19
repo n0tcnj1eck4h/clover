@@ -6,7 +6,7 @@ NumberValAST::NumberValAST(i64 value) : m_value(value) {}
 
 VariableExprAST::VariableExprAST(const std::string& name) : m_name(name) {}
 
-BinaryOpExpression::BinaryOpExpression(Operator op, std::unique_ptr<ExprAST> lhs, std::unique_ptr<ExprAST> rhs)
+BinaryOpExpression::BinaryOpExpression(char op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs)
     : m_operator(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
 
 CallExprAST::CallExprAST(std::string& callee, std::vector<std::unique_ptr<ExprAST>> args)

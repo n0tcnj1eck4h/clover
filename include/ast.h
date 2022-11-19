@@ -25,11 +25,11 @@ public:
 };
 
 class BinaryOpExpression : public ExprAST {
-	Operator m_operator;
+	char m_operator;
 	std::unique_ptr<ExprAST> m_lhs;
 	std::unique_ptr<ExprAST> m_rhs; 
 public:
-	BinaryOpExpression(Operator op, std::unique_ptr<ExprAST> lhs, std::unique_ptr<ExprAST> rhs); 
+	BinaryOpExpression(char op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs); 
 };
 
 class CallExprAST : public ExprAST {
