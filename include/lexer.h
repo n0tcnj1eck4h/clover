@@ -9,5 +9,5 @@ class Lexer {
 		
 	public:
 		Lexer(std::istream& stream);
-		const Token getToken();
+		Token getToken();
 };

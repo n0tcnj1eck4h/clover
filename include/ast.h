@@ -10,13 +10,19 @@ class ExprAST {
 		virtual ~ExprAST();
 };
 
-class NumberValAST : public ExprAST {
+class IntegerLiteralAST : public ExprAST {
 	i64 m_value;
 
 public:
-	NumberValAST(i64 value);
+	IntegerLiteralAST(i64 value);
 };
 
+class DecimalLiteralAST : public ExprAST {
+	f64 m_value;
+
+public:
+	DecimalLiteralAST(f64 value);
+};
 
 class VariableExprAST : public ExprAST {
 	std::string m_name;
@@ -39,7 +45,6 @@ class CallExprAST : public ExprAST {
 public:
 	CallExprAST(std::string& callee, std::vector<std::unique_ptr<ExprAST>> args);
 };
-
 
 class PrototypeAST {
 	std::string m_name;

@@ -1,4 +1,5 @@
 #include <cctype>
+#include <exception>
 #include <ios>
 #include <iostream>
 #include <istream>
@@ -9,33 +10,11 @@
 
 Lexer::Lexer(std::istream& stream) : stream(stream) {};
 
-//TokenVariant Lexer::get_token() {
-//	if(stream.eof())
-//		return Token::EndOfFile{};
-//	
-//	//stream >> std::skipws >> buffer;
-//
-//	//if(buffer[0] == '#') {
-//	//	stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-//	//	return get_token();
-//	//}
-//
-//	if(stream >> float_buffer)
-//		return Token::Number{ float_buffer }; else stream.clear();
-//
-//	stream >> buffer;
-//
-//	if(buffer == "def")    return Token::Keyword{ Token::KeywordEnum::DEFINE };
-//	if(buffer == "extern") return Token::Keyword{ Token::KeywordEnum::EXTERN };
-//
-//	return Token::Identifier{ buffer };
-//}
-
-
-const Token Lexer::getToken() {
+Token Lexer::getToken() {
     // Skip whitespace
     while(std::isspace(stream.peek())) stream.get();
 
+    // Check for end of file
     if(stream.peek() == std::char_traits<char>::eof()) return Token(Token::Type::EndOfFile);
 
     // Skip comments
@@ -48,7 +27,11 @@ const Token Lexer::getToken() {
     switch(stream.peek()) {
         case '(':
         case ')':
-            return Token((char)stream.peek());
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+            return Token(Token::Atom{(char)stream.get()});
     }
 
     // Identifiers start with a letter or '_'
@@ -61,24 +44,31 @@ const Token Lexer::getToken() {
         if(temp == "def")    return Token(Token::Keyword::Define);
         if(temp == "extern") return Token(Token::Keyword::Extern);
 
-        return Token( std::move(temp) );
+        return Token(Token::Identifier{temp});
     }
 
     // Numeric literals start with a number
-    if(std::isdigit(stream.peek())) {
-        f64 value;
-        if(stream >> value) return Token(value);
-        else {
-		throw;
-            // stream.clear();
-            // std::string temp;
-            // stream >> temp;
-            // return Token::Unexpected{ std::move(temp) };
-        }
-    }
-	throw;
+    if(std::isdigit(stream.peek())){
+        i64 integer = 0;
+        f64 decimal = 0.0;
+        f64 div = 10.0;
 
-    // std::string temp;
-    // stream >> temp;
-    // return Token::Unexpected{ std::move(temp) };
+        while(std::isdigit(stream.peek())) {
+            integer = integer * 10 + stream.get() - '0';
+        }
+
+        if(stream.get() == '.')
+            while(std::isdigit(stream.peek())) {
+                decimal = decimal + (f64)(stream.get() - '0') / div;
+                div *= 10.0;
+            }
+        else return Token(integer);
+        return Token((f64)integer + decimal);
+    }
+
+    std::string temp;
+    stream >> temp;
+    std::cout << "Unexpected symbols reached: " << temp << std::endl; 
+
+	throw std::exception();
 }

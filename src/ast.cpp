@@ -2,7 +2,8 @@
 
 ExprAST::~ExprAST() {}
 
-NumberValAST::NumberValAST(i64 value) : m_value(value) {}
+IntegerLiteralAST::IntegerLiteralAST(i64 value) : m_value(value) {}
+DecimalLiteralAST::DecimalLiteralAST(f64 value) : m_value(value) {}
 
 VariableExprAST::VariableExprAST(const std::string& name) : m_name(name) {}
 

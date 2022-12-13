@@ -17,6 +17,7 @@ public:
   std::unique_ptr<ExprAST> parseExpression();
   std::unique_ptr<ExprAST> parsePrimary();
   std::unique_ptr<ExprAST> parseRHSBinaryExpr(i32 exprPrecedence, std::unique_ptr<ExprAST> lhs); 
+  std::unique_ptr<PrototypeAST> parsePrototype();
 
   static i32 getOperatorPrecedence(char op);
 };

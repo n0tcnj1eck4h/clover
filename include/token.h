@@ -1,7 +1,6 @@
 #pragma once
 #include "types.h"
 #include <string>
-#include <sys/types.h>
 #include <variant>
 
 class Token {
@@ -9,35 +8,38 @@ public:
   enum class Type {
     EndOfFile,
     Integer,
-    Float,
+    Decimal,
     Identifier,
     Keyword,
     Atom,
-    What
   };
 
-  enum class Keyword { Define, Extern };
+  enum class Keyword : u8 { Define, Extern };
+  struct Identifier { std::string identifier; };
+  struct Atom { char atom; };
 
   Token() = delete;
   Token(Type type);
-  Token(char atom);
+  Token(Atom atom);
   Token(f64 decimal);
   Token(i64 integer);
   Token(Keyword keyword);
-  Token(const std::string &identifier);
+  Token(const Identifier &identifier);
 
   Type getType() const;
   bool matchAtom(char atom);
   bool matchKeyword(Keyword keyword);
 
-  bool getValue(f64 &decimal);
-  bool getValue(i64 &integer);
-  bool getValue(char &atom);
-  bool getValue(std::string &identifier);
+  bool getValue(f64 &decimal, bool should_throw = true);
+  bool getValue(i64 &integer, bool should_throw = true);
+  bool getValue(Atom &atom, bool should_throw = true);
+  bool getValue(Identifier &identifier, bool should_throw = true);
+
+  std::string toString() const;
 
 private:
   Type m_type;
-  std::variant<char, f64, i64, std::string, Keyword> m_data;
+  std::variant<Atom, f64, i64, Identifier, Keyword> m_data;
 };
 
 /*
