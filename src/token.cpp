@@ -3,25 +3,28 @@
 #include <sstream>
 #include <variant>
 
-Token::Token(Token::Type type) : m_type(type), m_data() { }
-Token::Token(Atom atom) : m_type(Token::Type::Atom), m_data(atom) { }
-Token::Token(f64 decimal) : m_type(Token::Type::Decimal), m_data(decimal) { }
-Token::Token(i64 integer) : m_type(Token::Type::Integer), m_data(integer) { }
-Token::Token(Keyword keyword) : m_type(Token::Type::Keyword), m_data(keyword) { }
-Token::Token(const Identifier& identifier) : m_type(Token::Type::Identifier), m_data(identifier) { }
+Token::Token(Atom atom) : m_data(atom) { }
+Token::Token(f64 decimal) : m_data(decimal) { }
+Token::Token(i64 integer) : m_data(integer) { }
+Token::Token(Keyword keyword) : m_data(keyword) { }
+Token::Token(const Identifier& identifier) : m_data(identifier) { }
+
+Token Token::EndOfFile() {
+	return Token(); // Empty private constructor will be used for EOF for now
+}
 
 Token::Type Token::getType() const {
-	return m_type;
+	return (Token::Type)m_data.index();
 }
 
 bool Token::matchAtom(char atom) {
 	auto a = std::get_if<Atom>(&m_data);
-	return m_type == Token::Type::Atom && a && a->atom == atom;
+	return getType() == Token::Type::Atom && a && a->atom == atom;
 }
 
 bool Token::matchKeyword(Keyword keyword) {
 	auto k = std::get_if<Token::Keyword>(&m_data);
-	bool match = m_type == Token::Type::Keyword && k && *k == keyword;
+	bool match = getType() == Token::Type::Keyword && k && *k == keyword;
 	if(false && !match) {
 		std::stringstream ss;
 		ss << "Keyword(" << (u8)keyword << ")";
@@ -76,7 +79,7 @@ bool Token::getValue(Identifier& identifier, bool should_throw) {
 
 std::string Token::toString() const {
 	std::stringstream ss;
-	switch (m_type) {
+	switch (getType()) {
     case Token::Type::EndOfFile:
     	ss << "EndOfFile";
     	break;
@@ -94,7 +97,7 @@ std::string Token::toString() const {
     	break;
 
     case Token::Type::Keyword:
-			ss << "Keyword(" << (u8)std::get<Keyword>(m_data) << ")";
+			ss << "Keyword(" << (i32)std::get<Keyword>(m_data) << ")";
     	break;
 
     case Token::Type::Atom:

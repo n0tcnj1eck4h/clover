@@ -134,7 +134,7 @@ Parser::parseRHSBinaryExpr(i32 exprPrecedence, std::unique_ptr<ExprAST> lhs) {
         return nullptr;
     }
 
-    lhs = std::make_unique<BinaryOpExpression>(op.atom, lhs, rhs);
+    lhs = std::make_unique<BinaryOpExprAST>(op.atom, lhs, rhs);
   }
 }
 

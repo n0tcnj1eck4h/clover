@@ -8,6 +8,7 @@
 class ExprAST {
 	public:
 		virtual ~ExprAST();
+		virtual std::string toString() = 0;
 };
 
 class IntegerLiteralAST : public ExprAST {
@@ -15,6 +16,7 @@ class IntegerLiteralAST : public ExprAST {
 
 public:
 	IntegerLiteralAST(i64 value);
+	virtual std::string toString() override;
 };
 
 class DecimalLiteralAST : public ExprAST {
@@ -22,20 +24,23 @@ class DecimalLiteralAST : public ExprAST {
 
 public:
 	DecimalLiteralAST(f64 value);
+	virtual std::string toString() override;
 };
 
 class VariableExprAST : public ExprAST {
 	std::string m_name;
 public:
 	VariableExprAST(const std::string& name);
+	virtual std::string toString() override;
 };
 
-class BinaryOpExpression : public ExprAST {
+class BinaryOpExprAST : public ExprAST {
 	char m_operator;
 	std::unique_ptr<ExprAST> m_lhs;
 	std::unique_ptr<ExprAST> m_rhs; 
 public:
-	BinaryOpExpression(char op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs); 
+	BinaryOpExprAST(char op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs); 
+	virtual std::string toString() override;
 };
 
 class CallExprAST : public ExprAST {
@@ -44,6 +49,7 @@ class CallExprAST : public ExprAST {
 
 public:
 	CallExprAST(std::string& callee, std::vector<std::unique_ptr<ExprAST>> args);
+	virtual std::string toString() override;
 };
 
 class PrototypeAST {
@@ -53,12 +59,15 @@ class PrototypeAST {
 public:
 	PrototypeAST(std::string& name, std::vector<std::string>& args);
 	const std::string& getName() const;
+	std::string toString();
 };
 
 class FunctionAST {
 	std::unique_ptr<PrototypeAST> m_prototype;
 	std::unique_ptr<ExprAST> m_body;
+
 public:
 	FunctionAST(std::unique_ptr<PrototypeAST> prototype, std::unique_ptr<ExprAST> body);
+	std::string toString();
 };
 

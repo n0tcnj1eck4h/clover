@@ -14,12 +14,12 @@ public:
     Atom,
   };
 
-  enum class Keyword : u8 { Define, Extern };
+  enum class Keyword : i32 { Define, Extern };
   struct Identifier { std::string identifier; };
   struct Atom { char atom; };
 
-  Token() = delete;
-  Token(Type type);
+  static Token EndOfFile();
+
   Token(Atom atom);
   Token(f64 decimal);
   Token(i64 integer);
@@ -38,8 +38,8 @@ public:
   std::string toString() const;
 
 private:
-  Type m_type;
-  std::variant<Atom, f64, i64, Identifier, Keyword> m_data;
+  Token() = default;
+  std::variant<std::monostate, i64, f64, Identifier, Keyword, Atom> m_data;
 };
 
 /*
