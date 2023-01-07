@@ -1,15 +1,19 @@
-#include "ast.h"
 #include <sstream>
+#include "ast.h"
 
+ASTNode::~ASTNode() {}
 ExprAST::~ExprAST() {}
 
-IntegerLiteralAST::IntegerLiteralAST(i64 value) : m_value(value) {}
-DecimalLiteralAST::DecimalLiteralAST(f64 value) : m_value(value) {}
+
+LiteralAST::LiteralAST(const Value& value) : m_value(value) {}
+
 
 VariableExprAST::VariableExprAST(const std::string& name) : m_name(name) {}
 
-BinaryOpExprAST::BinaryOpExprAST(char op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs)
+
+BinaryOpExprAST::BinaryOpExprAST(Operator op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs)
     : m_operator(op), m_lhs(std::move(lhs)), m_rhs(std::move(rhs)) {}
+
 
 CallExprAST::CallExprAST(std::string& callee, std::vector<std::unique_ptr<ExprAST>> args)
     : m_callee(callee), m_args(std::move(args)) {}
@@ -23,15 +27,9 @@ FunctionAST::FunctionAST(std::unique_ptr<PrototypeAST> prototype, std::unique_pt
     : m_prototype(std::move(prototype)), m_body(std::move(body)) {}
 
 
-std::string IntegerLiteralAST::toString() {
+std::string LiteralAST::toString() {
     std::stringstream ss;
-    ss << m_value;
-    return ss.str();
-}
-
-std::string DecimalLiteralAST::toString() {
-    std::stringstream ss;
-    ss << m_value;
+    ss << "<Value " << m_value.toString() << ">";
     return ss.str();
 }
 
@@ -43,7 +41,7 @@ std::string VariableExprAST::toString() {
 
 std::string BinaryOpExprAST::toString() {
     std::stringstream ss;
-    ss << "<BinExpr " << m_lhs->toString() << ", " << m_operator << ", " << m_rhs->toString() << ">";
+    ss << "<BinExpr " << m_lhs->toString() << ", " << (int)m_operator << ", " << m_rhs->toString() << ">";
     return ss.str();
 }
 

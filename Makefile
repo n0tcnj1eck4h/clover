@@ -3,7 +3,7 @@ SOURCES = $(wildcard src/*.cpp)
 DEPFLAGS = -MT $@ -MMD -MP -MF deps/$*.d 
 DEPFILES := $(SOURCES:src/%.cpp=deps/%.d) 
 
-CFLAGS :=-Wall -Wextra -pedantic -g -Iinclude -DDEBUG -std=c++20
+CFLAGS := -Wall -O0 -Wextra -pedantic -g -Iinclude -DDEBUG -std=c++20
 
 OBJS = $(patsubst src/%.cpp, obj/%.o, $(SOURCES))
 

@@ -3,76 +3,77 @@
 #include "token.h"
 #include "errors.h"
 #include <memory>
+#include <iostream>
 #include <mutex>
 #include <utility>
 #include <variant>
+
+void Parser::expect(const Token val) {
+  if(m_current_token != val) {
+    throw UnexpectedTokenException(m_current_token, val.toString());
+  }
+  getNextToken();
+}
+
+void Parser::expect(const Token::Type type) {
+    if(m_current_token.getType() != type) {
+        throw UnexpectedTokenException(m_current_token, "");
+    }
+}
+
+bool Parser::match(const Token val) {
+  if(m_current_token != val) 
+    return false;
+
+  getNextToken();
+  return true;
+}
 
 Parser::Parser(Lexer &lexer)
     : m_lexer(lexer), m_current_token(lexer.getToken()){};
 
 Token &Parser::getNextToken() {
   m_current_token = m_lexer.getToken();
+  std::cout << m_current_token.toString() << std::endl;
   return m_current_token;
 }
 
 // numberexp ::= number
-std::unique_ptr<ExprAST> Parser::parseNumberExpr() {
-  i64 integer;
-  f64 decimal;
-  if (m_current_token.getValue(integer, false)) {
-    auto result = std::make_unique<IntegerLiteralAST>(integer);
+std::unique_ptr<ExprAST> Parser::parseLiteralExpr() {
+    Value decimal = m_current_token.get<Token::Literal>();
     getNextToken();
-    return result;
-  }
-
-  if (m_current_token.getValue(decimal, false)) {
-    auto result = std::make_unique<IntegerLiteralAST>(decimal);
-    getNextToken();
-    return result;
-  }
-
-  throw UnexpectedTokenException(m_current_token, "Integer literal");
+    return std::make_unique<LiteralAST>(Value(decimal));
 }
 
 // parenexpr ::= '(' expression ')'
 std::unique_ptr<ExprAST> Parser::parseParenExpr() {
-  if (!m_current_token.matchAtom('(')) throw UnexpectedTokenException(m_current_token, "(");
-  getNextToken();
-
-  auto exp = parseExpression();
-
-  if (!m_current_token.matchAtom(')')) throw UnexpectedTokenException(m_current_token, ")");
-  getNextToken();
-
-  return exp;
+    expect(Token(Atom::PAREN_OPEN));
+    auto exp = parseExpression();
+    expect(Token(Atom::PAREN_CLOSE));
+    return exp;
 }
 
 // identifierexpr
 //   ::= identifier
 //   ::= identifier '(' expression* ')'
 std::unique_ptr<ExprAST> Parser::parseIdentifierExpr() {
-    Token::Identifier identifier;
-
-  m_current_token.getValue(identifier);
-  getNextToken();
-
-  // Try parsing a function call
-  if (m_current_token.matchAtom('(')) {
-    std::vector<std::unique_ptr<ExprAST>> args;
-
-    do {
-      getNextToken();
-      args.push_back(parseExpression());
-    } while (m_current_token.matchAtom(','));
-
-    if (!m_current_token.matchAtom(')')) throw UnexpectedTokenException(m_current_token, ")");
+    Token::Identifier identifier = m_current_token.get<Token::Identifier>();
     getNextToken();
-
-    return std::make_unique<CallExprAST>(identifier.identifier, std::move(args));
-  }
-
-  // otherwise return a simple variable reference
-  return std::make_unique<VariableExprAST>(identifier.identifier);
+  
+    // Try parsing a function call
+    if (match(Token(Atom::PAREN_OPEN))) {
+      std::vector<std::unique_ptr<ExprAST>> args;
+  
+      do {
+        args.push_back(parseExpression());
+      } while (match(Token(Atom::COMMA)));
+  
+      expect(Token(Atom::PAREN_CLOSE));
+  
+      return std::make_unique<CallExprAST>(identifier, std::move(args));
+    }
+  
+    return std::make_unique<VariableExprAST>(identifier);
 }
 
 std::unique_ptr<ExprAST> Parser::parseExpression() {
@@ -91,12 +92,11 @@ std::unique_ptr<ExprAST> Parser::parsePrimary() {
   case Token::Type::Identifier:
     return parseIdentifierExpr();
 
-  case Token::Type::Integer:
-  case Token::Type::Decimal:
-    return parseNumberExpr();
+  case Token::Type::Literal:
+    return parseLiteralExpr();
 
   case Token::Type::Atom:
-    if (m_current_token.matchAtom('('))
+    if (m_current_token == Token(Atom::PAREN_OPEN))
       return parseParenExpr();
     else throw UnexpectedTokenException(m_current_token, "(");
 
@@ -110,10 +110,13 @@ std::unique_ptr<ExprAST> Parser::parsePrimary() {
 std::unique_ptr<ExprAST>
 Parser::parseRHSBinaryExpr(i32 exprPrecedence, std::unique_ptr<ExprAST> lhs) {
   while (true) {
-    Token::Atom op;
-    m_current_token.getValue(op);
+    if(m_current_token.getType() != Token::Type::Operator) {
+      return lhs;
+    }
 
-    i32 tokenPrecedence = getOperatorPrecedence(op.atom);
+    Operator op = m_current_token.get<Operator>();
+
+    i32 tokenPrecedence = getOperatorPrecedence(op);
 
     if (exprPrecedence > tokenPrecedence)
       return lhs;
@@ -124,53 +127,56 @@ Parser::parseRHSBinaryExpr(i32 exprPrecedence, std::unique_ptr<ExprAST> lhs) {
     if (!rhs)
       return nullptr;
 
-    Token::Atom next_op;
-    m_current_token.getValue(next_op);
+    i32 nextTokenPrecedence = -1;
+    if(m_current_token.getType() == Token::Type::Operator) {
+      Operator next_op = m_current_token.get<Operator>();
+      nextTokenPrecedence = getOperatorPrecedence(next_op);
+    }
 
-    i32 nextTokenPrecedence = getOperatorPrecedence(next_op.atom);
     if (tokenPrecedence < nextTokenPrecedence) {
       rhs = parseRHSBinaryExpr(exprPrecedence + 1, std::move(rhs));
       if (!rhs)
         return nullptr;
     }
 
-    lhs = std::make_unique<BinaryOpExprAST>(op.atom, lhs, rhs);
+    lhs = std::make_unique<BinaryOpExprAST>(op, lhs, rhs);
   }
 }
 
 std::unique_ptr<PrototypeAST> Parser::parsePrototype() {
-    Token::Identifier identifier;
-    m_current_token.getValue(identifier);
+    Token::Identifier identifier = m_current_token.get<Token::Identifier>();
     getNextToken();
 
-    if (!m_current_token.matchAtom('(')) throw UnexpectedTokenException(m_current_token, "(");
+    expect(Token(Atom::PAREN_OPEN));
 
     std::vector<std::string> args;
-    Token::Identifier arg;
-    
+
     while(getNextToken().getType() == Token::Type::Identifier) {
-        m_current_token.getValue(arg);
-        args.push_back(arg.identifier);
+      Token::Identifier arg = m_current_token.get<Token::Identifier>();
+      args.push_back(arg);
     }
 
-    if (!m_current_token.matchAtom(')')) throw UnexpectedTokenException(m_current_token, ")");
-    getNextToken();
+    expect(Token(Atom::PAREN_CLOSE));
 
-    return std::make_unique<PrototypeAST>(identifier.identifier, args);
+    return std::make_unique<PrototypeAST>(identifier, args);
 }
 
-i32 Parser::getOperatorPrecedence(char op) {
-  switch (op) {
-  case '+':
-  case '-':
-    return 10;
+i32 Parser::getOperatorPrecedence(Operator op) {
+    switch (op) {
+    case Operator::ADD:
+    case Operator::SUB:
+      return 10;
+    
+    case Operator::MUL:
+    case Operator::DIV:
+    case Operator::DIV_FLR:
+      return 20;
 
-  case '*':
-  case '/':
-    return 20;
-
-  default:
-    return -1;
-  }
+    case Operator::POW:
+      return 30;
+    
+    default:
+      return -1;
+    }
 }
 

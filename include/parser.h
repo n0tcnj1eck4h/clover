@@ -11,7 +11,7 @@ class Parser {
 
 public:
   Parser(Lexer &lexer);
-  std::unique_ptr<ExprAST> parseNumberExpr();
+  std::unique_ptr<ExprAST> parseLiteralExpr();
   std::unique_ptr<ExprAST> parseParenExpr();
   std::unique_ptr<ExprAST> parseIdentifierExpr();
   std::unique_ptr<ExprAST> parseExpression();
@@ -19,5 +19,12 @@ public:
   std::unique_ptr<ExprAST> parseRHSBinaryExpr(i32 exprPrecedence, std::unique_ptr<ExprAST> lhs); 
   std::unique_ptr<PrototypeAST> parsePrototype();
 
-  static i32 getOperatorPrecedence(char op);
+  bool match(const Token val);
+  void expect(const Token val);
+  void expect(const Token::Type type);
+
+  static i32 getOperatorPrecedence(Operator op);
 };
+
+
+

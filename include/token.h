@@ -1,46 +1,62 @@
 #pragma once
-#include "types.h"
 #include <string>
 #include <variant>
+#include "enums.h"
+#include "types.h"
+#include "value.h"
 
 class Token {
 public:
   enum class Type {
     EndOfFile,
-    Integer,
-    Decimal,
     Identifier,
     Keyword,
+    Operator,
     Atom,
+    Literal,
   };
 
-  enum class Keyword : i32 { Define, Extern };
-  struct Identifier { std::string identifier; };
-  struct Atom { char atom; };
+  using Identifier = std::string;
+  using Literal = Value;
+  using Variant = std::variant<std::monostate, Identifier, Keyword, Operator, Atom, Literal>;
 
-  static Token EndOfFile();
-
-  Token(Atom atom);
-  Token(f64 decimal);
-  Token(i64 integer);
-  Token(Keyword keyword);
-  Token(const Identifier &identifier);
-
-  Type getType() const;
-  bool matchAtom(char atom);
-  bool matchKeyword(Keyword keyword);
-
-  bool getValue(f64 &decimal, bool should_throw = true);
-  bool getValue(i64 &integer, bool should_throw = true);
-  bool getValue(Atom &atom, bool should_throw = true);
-  bool getValue(Identifier &identifier, bool should_throw = true);
-
+  Token(const Variant& data = std::monostate());
   std::string toString() const;
+  Type getType() const;
+
+  template<typename T>
+  T get();
+
+  template<typename T>
+  bool get(T& val);
+
+  bool operator==(const Token& t) const;
+
+  
+  //bool matchKeyword(Keyword keyword);
+  // bool getValue(f64 &decimal, bool should_throw = true);
+  // bool getValue(i64 &integer, bool should_throw = true);
+  // bool getValue(Identifier &identifier, bool should_throw = true);
+
 
 private:
-  Token() = default;
-  std::variant<std::monostate, i64, f64, Identifier, Keyword, Atom> m_data;
+  Variant m_data;
 };
+
+template<typename T>
+T Token::get() {
+  return std::get<T>(m_data);
+}
+
+template<typename T>
+bool Token::get(T& val) {
+  auto v = std::get_if<T>(m_data);
+  if(!v)
+    return false;
+
+  val = *v;
+  return true;
+}
 
 /*
 struct Token {
