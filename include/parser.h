@@ -1,5 +1,5 @@
 #pragma once
-#include "ast.h"
+#include "ast/AST.h"
 #include "lexer.h"
 #include "token.h"
 #include <memory>

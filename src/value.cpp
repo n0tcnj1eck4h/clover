@@ -1,4 +1,6 @@
 #include "value.h"
+#include <cmath>
+#include <math.h>
 #include <sstream>
 
 Value::Value(const Value::Variant& data) : m_data(data) {}
@@ -25,4 +27,135 @@ std::string Value::toString() const {
   }
 
   return "Error";
+}
+
+Value Value::operator+(const Value& v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    {
+      std::string l = std::get<std::string>(m_data);
+      std::string r = std::get<std::string>(v.m_data);
+      return Value(l + r);
+    }
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value(l + r);
+    }
+  }
+
+  return Value();
+}
+
+Value Value::operator-(const Value& v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value(l - r);
+    }
+  }
+
+  return Value();
+}
+
+Value Value::operator*(const Value& v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value(l * r);
+    }
+  }
+
+  return Value();
+}
+
+Value Value::operator/(const Value& v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value(l / r);
+    }
+  }
+
+  return Value();
+}
+
+Value Value::power(const Value &v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value(pow(l, r));
+    }
+  }
+
+  return Value();
+}
+
+Value Value::divFloor(const Value &v) const {
+  if(v.getType() != getType()) {
+    return Value("Type error");
+  }
+  
+  switch(getType()) {
+    case Type::STRING:
+    case Type::NIL:
+      return Value();
+
+    case Type::NUMBER:
+    {
+      f64 l = std::get<f64>(m_data);
+      f64 r = std::get<f64>(v.m_data);
+      return Value((f64)((int)l / (int)r));
+    }
+  }
+
+  return Value();
 }

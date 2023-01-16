@@ -24,25 +24,25 @@ int main(int argc, const char **argv) {
     Lexer lexer(script);
     Parser parser(lexer);
     auto expr = parser.parsePrimary();
-    std::cout << expr->toString() << std::endl;
+    std::cout << expr->evaluate().toString() << std::endl;
     exit(EX_OK);
   }
 
   Lexer lexer(std::cin);
   Token token;
 
-  // do {
-  //   std::cout << "> ";  
-  //   Parser parser(lexer);
-  //   auto expr = parser.parseExpression();
-  //   std::cout << expr->toString() << std::endl;
-  // } while (true);
-
   do {
     std::cout << "> ";  
-    token = lexer.getToken();
-    std::cout << "Token type: " << token.toString() << std::endl;
-  } while (token.getType() != Token::Type::EndOfFile);
+    Parser parser(lexer);
+    auto expr = parser.parsePrimary();
+    std::cout << expr->evaluate().toString() << std::endl;
+  } while (true);
+
+  // do {
+  //   std::cout << "> ";  
+  //   token = lexer.getToken();
+  //   std::cout << "Token type: " << token.toString() << std::endl;
+  // } while (token.getType() != Token::Type::EndOfFile);
 
   return EX_OK;
 }

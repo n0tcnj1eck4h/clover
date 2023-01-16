@@ -1,5 +1,9 @@
 #include "parser.h"
-#include "ast.h"
+#include "ast/AST.h"
+#include "ast/literalAST.h"
+#include "ast/binopAST.h"
+#include "ast/callAST.h"
+#include "ast/variableAST.h"
 #include "token.h"
 #include "errors.h"
 #include <memory>
@@ -34,7 +38,6 @@ Parser::Parser(Lexer &lexer)
 
 Token &Parser::getNextToken() {
   m_current_token = m_lexer.getToken();
-  std::cout << m_current_token.toString() << std::endl;
   return m_current_token;
 }
 

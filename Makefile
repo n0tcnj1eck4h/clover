@@ -23,7 +23,7 @@ clean:
 	$(RM) obj/*.o
 	$(RM) deps/*.d
 
-obj/%.o: src/%.cpp deps/%.d
+obj/%.o obj/%.o: src/%.cpp deps/%.d
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 $(DEPFILES):

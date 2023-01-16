@@ -17,6 +17,12 @@ class Value {
     Value(const Variant& data = std::monostate());
     inline Type getType() const { return (Type)m_data.index(); }
     bool operator==(const Value& v) const;
+    Value operator+(const Value& v) const;
+    Value operator-(const Value& v) const;
+    Value operator*(const Value& v) const;
+    Value operator/(const Value& v) const;
+    Value divFloor(const Value& v) const;
+    Value power(const Value& v) const;
     std::string toString() const;
 
   private:
