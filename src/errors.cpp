@@ -1,14 +1,27 @@
 #include "token.h"
 #include <errors.h>
 #include <sstream>
+#include "ANSI-color-codes.h"
 
 UnexpectedTokenException::UnexpectedTokenException(Token token, const std::string expectation) 
-  : m_token(token), m_expectation(expectation) {}
+  : m_token(token), m_expected_tokens(expectation) {
+    std::stringstream ss;
+    ss << RED << "Unexpected " << m_token.toString()
+      << " on line " << m_token.row 
+      << " column " << m_token.col << ". " 
+      << m_expected_tokens << " expected\n"
+      << CRESET;
+    m_exception = ss.str();
+  }
 
 const char* UnexpectedTokenException::what() const noexcept {
-  static std::string ret;
-  std::stringstream ss;
-  ss << "Unexpected token " << m_token.toString() << ". " << m_expectation << " expected\n";
-  ret = ss.str();
- return ret.c_str();
+  return m_exception.c_str();
+}
+
+Token UnexpectedTokenException::getToken() const {
+  return m_token;
+}
+
+const char* TypeMismatchException::what() const noexcept {
+  return "Type mismatch error";
 }

@@ -13,6 +13,10 @@ class ASTNode {
 		virtual std::string toString() = 0;
 };
 
+class StmtAST : public ASTNode {
+	public:
+		virtual ~StmtAST();
+};
 
 class ExprAST : public ASTNode {
 	public:

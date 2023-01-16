@@ -10,16 +10,16 @@ OBJS = $(patsubst src/%.cpp, obj/%.o, $(SOURCES))
 .PHONY: all build clean run
 
 all: build
-build: build/out
+build: interpreter
 
-build/out: $(OBJS)
+interpreter: $(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $@
 
-run: build/out
-	build/out
+run: interpreter
+	@./interpreter
 
 clean:
-	$(RM) build/out
+	$(RM) interpreter
 	$(RM) obj/*.o
 	$(RM) deps/*.d
 

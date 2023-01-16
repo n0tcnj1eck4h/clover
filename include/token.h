@@ -38,6 +38,8 @@ public:
   // bool getValue(i64 &integer, bool should_throw = true);
   // bool getValue(Identifier &identifier, bool should_throw = true);
 
+public:
+  int col, row;
 
 private:
   Variant m_data;

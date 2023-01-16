@@ -4,9 +4,7 @@
 LiteralAST::LiteralAST(const Value& value) : m_value(value) {}
 
 std::string LiteralAST::toString() {
-    std::stringstream ss;
-    ss << "<Value " << m_value.toString() << ">";
-    return ss.str();
+    return m_value.toString();
 }
 
 Value LiteralAST::evaluate() {

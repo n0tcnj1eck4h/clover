@@ -28,6 +28,13 @@ bool Lexer::match(char c) {
 }
 
 Token Lexer::getToken() {
+    auto token = getToken2();
+    token.col = column;
+    token.row = row;
+    return token;
+}
+
+Token Lexer::getToken2() {
     // Skip whitespace
     while(std::isspace(peek())) get();
 
@@ -63,8 +70,10 @@ Token Lexer::getToken() {
             temp += get();
         }
 
-        if(temp == "def")    return Token(Keyword::DEFINE);
-        if(temp == "extern") return Token(Keyword::EXTERN);
+        // if(temp == "var")    return Token(Keyword::VAR);
+        // if(temp == "def")    return Token(Keyword::DEFINE);
+        // if(temp == "extern") return Token(Keyword::EXTERN);
+        if(temp == "print")  return Token(Keyword::PRINT);
 
         return Token(Token::Identifier(temp));
     }
@@ -99,6 +108,7 @@ Token Lexer::getToken() {
         return Token(Token::Literal((f64)integer + decimal));
     }
 
+    // TODO
     std::string temp;
     stream >> temp;
     std::cout << "Unexpected string reached: " << temp << std::endl; 

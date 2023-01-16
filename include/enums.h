@@ -15,7 +15,9 @@ enum class Operator {
 
 enum class Keyword { 
   DEFINE, 
-  EXTERN 
+  EXTERN,
+  PRINT,
+  VAR
 };
 
 enum class Atom {

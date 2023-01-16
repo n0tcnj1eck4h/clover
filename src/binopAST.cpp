@@ -6,7 +6,7 @@ BinaryOpExprAST::BinaryOpExprAST(Operator op, std::unique_ptr<ExprAST>& lhs, std
 
 std::string BinaryOpExprAST::toString() {
     std::stringstream ss;
-    ss << "<BinExpr " << m_lhs->toString() << ", " << (int)m_operator << ", " << m_rhs->toString() << ">";
+    ss << "(" << m_lhs->toString() << ", " << (int)m_operator << ", " << m_rhs->toString() << ")";
     return ss.str();
 }
 

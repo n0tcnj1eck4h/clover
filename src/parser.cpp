@@ -4,6 +4,7 @@
 #include "ast/binopAST.h"
 #include "ast/callAST.h"
 #include "ast/variableAST.h"
+#include "enums.h"
 #include "token.h"
 #include "errors.h"
 #include <memory>
@@ -39,6 +40,23 @@ Parser::Parser(Lexer &lexer)
 Token &Parser::getNextToken() {
   m_current_token = m_lexer.getToken();
   return m_current_token;
+}
+
+std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
+  std::vector<std::unique_ptr<StmtAST>> statements;
+  while(m_current_token != Token()) {
+    statements.push_back(parseStatement());
+  }
+
+  return statements;
+}
+
+std::unique_ptr<StmtAST> Parser::parseStatement() {
+ if(match(Token(Keyword::PRINT))) {
+
+ }
+
+ throw UnexpectedTokenException(m_current_token, "Statement");
 }
 
 // numberexp ::= number
@@ -104,7 +122,7 @@ std::unique_ptr<ExprAST> Parser::parsePrimary() {
     else throw UnexpectedTokenException(m_current_token, "(");
 
   default:
-    throw UnexpectedTokenException(m_current_token, "Identifier, Integer, Decimal or Atom");
+    throw UnexpectedTokenException(m_current_token, "Expression");
   }
 }
 
