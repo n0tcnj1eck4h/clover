@@ -2,6 +2,8 @@
 #include "parser.h"
 #include "token.h"
 #include <cstdlib>
+#include <sstream>
+#include <string>
 #include <sysexits.h>
 #include <fstream>
 #include <iostream>
@@ -28,13 +30,17 @@ int main(int argc, const char **argv) {
     exit(EX_OK);
   }
 
-  Lexer lexer(std::cin);
-  Token token;
+  
 
   do {
     std::cout << "> ";  
+    std::string temp;
+    std::getline(std::cin, temp);
+    std::stringstream ss(temp);
+
+    Lexer lexer(ss);
     Parser parser(lexer);
-    auto expr = parser.parsePrimary();
+    auto expr = parser.parseExpression();
     std::cout << expr->evaluate().toString() << std::endl;
   } while (true);
 
