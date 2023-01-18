@@ -23,6 +23,7 @@ class Value {
     Value operator/(const Value& v) const;
     Value divFloor(const Value& v) const;
     Value power(const Value& v) const;
+    bool truth() const;
     std::string toString() const;
 
   private:

@@ -159,3 +159,24 @@ Value Value::divFloor(const Value &v) const {
 
   return Value();
 }
+
+bool Value::truth() const {
+  switch(getType()) {
+    case Type::STRING:
+    {
+      std::string r = std::get<std::string>(m_data);
+      return r.length() != 0;
+    }
+
+    case Type::NIL:
+      return false;
+
+    case Type::NUMBER:
+    {
+      f64 r = std::get<f64>(m_data);
+      return r != 0.0;
+    }
+  }
+
+  return false;
+}

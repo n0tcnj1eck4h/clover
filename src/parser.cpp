@@ -8,6 +8,7 @@
 #include "ast/stmt/vardeclStmtAST.h"
 #include "ast/stmt/exprStmtAST.h"
 #include "ast/stmt/blockStmtAST.h"
+#include "ast/stmt/conditionalStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -79,14 +80,29 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
     return std::make_unique<PrintStmtAST>(expr);
   }
 
-  if(match(Token(Atom::BLOCK_OPEN))) {
+  if(match(Token(Atom::BLOCK_OPEN)))
       return parseBlock();
+  
+  if(match(Token(Keyword::IF))) {
+      return parseConditional();
   }
 
   auto expr = parseExpression();
   expect(Token(Atom::END_STATEMENT));
 
   return std::make_unique<ExprStmtAST>(expr);
+}
+
+std::unique_ptr<StmtAST> Parser::parseConditional() {
+    auto condition = parseExpression();
+    auto statements = parseStatement();
+
+    if(match(Token(Keyword::ELSE))) {
+        auto else_statements = parseStatement();
+        return std::make_unique<ConditionalStmtAST>(condition, statements, else_statements);
+    }
+
+    return std::make_unique<ConditionalStmtAST>(condition, statements);
 }
 
 std::unique_ptr<StmtAST> Parser::parseBlock() {

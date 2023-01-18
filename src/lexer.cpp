@@ -78,6 +78,8 @@ Token Lexer::getToken2() {
         // if(temp == "def")    return Token(Keyword::DEFINE);
         // if(temp == "extern") return Token(Keyword::EXTERN);
         if(temp == "print")  return Token(Keyword::PRINT);
+        if(temp == "if")     return Token(Keyword::IF);
+        if(temp == "else")   return Token(Keyword::ELSE);
 
         return Token(Token::Identifier(temp));
     }

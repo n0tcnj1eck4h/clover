@@ -17,7 +17,9 @@ enum class Keyword {
   DEFINE, 
   EXTERN,
   PRINT,
-  SET
+  SET,
+  IF,
+  ELSE
 };
 
 enum class Atom {
@@ -25,6 +27,7 @@ enum class Atom {
   PAREN_CLOSE,
   BLOCK_OPEN,
   BLOCK_CLOSE,
-  COMMA,
-  END_STATEMENT
+  END_STATEMENT,
+  COMMA
 };
+
