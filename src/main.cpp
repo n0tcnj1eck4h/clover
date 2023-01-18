@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "token.h"
 #include "value.h"
+#include "ANSI-color-codes.h"
 #include <cstdlib>
 #include <exception>
 #include <sstream>
@@ -48,21 +49,23 @@ int main(int argc, const char **argv) {
   Environment env;
   do {
     std::cout << "> ";  
+    std::string temp;
+    std::getline(std::cin, temp);
+    std::stringstream ss(temp);
     try {
-      Lexer lexer(std::cin);
+      Lexer lexer(ss);
       Parser parser(lexer);
       auto statements = parser.parse();
       for(auto& s : statements) {
         s->execute(env);
       }
     } catch(UnexpectedTokenException& e) {
-      if(e.getToken().getType() == Token::Type::EndOfFile) {
-        std::cout << "\no/\n";
-        break;
-      }
-      std::cerr << e.what() << std::endl;
+      for(int i = 0; i < e.getToken().col; i++)
+        std::cerr << ' ';
+      std::cerr << RED << " ^ " << e.what() << CRESET << std::endl;
     } 
-  } while (false); // TODO
+  } while (!std::cin.eof()); 
+  std::cout << "\no/\n";
 
   // // Enter REPL mode if no arguments were passed
   // std::cout << "// TODO: Insert a cool header here" << std::endl;

@@ -74,7 +74,7 @@ std::unique_ptr<StmtAST> Parser::parseDeclaration() {
 
 std::unique_ptr<StmtAST> Parser::parseStatement() {
   if(match(Token(Keyword::PRINT))) {
-    auto expr = parsePrimary();
+    auto expr = parseExpression();
     expect(Token(Atom::END_STATEMENT));
     return std::make_unique<PrintStmtAST>(expr);
   }
