@@ -7,6 +7,7 @@
 #include "ast/stmt/printStmtAST.h"
 #include "ast/stmt/vardeclStmtAST.h"
 #include "ast/stmt/exprStmtAST.h"
+#include "ast/stmt/blockStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -78,10 +79,23 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
     return std::make_unique<PrintStmtAST>(expr);
   }
 
+  if(match(Token(Atom::BLOCK_OPEN))) {
+      return parseBlock();
+  }
+
   auto expr = parseExpression();
   expect(Token(Atom::END_STATEMENT));
 
   return std::make_unique<ExprStmtAST>(expr);
+}
+
+std::unique_ptr<StmtAST> Parser::parseBlock() {
+  std::vector<std::unique_ptr<StmtAST>> statements;
+  do {
+    statements.push_back(parseDeclaration());
+  } while(!match(Token(Atom::BLOCK_CLOSE)));
+
+  return std::make_unique<BlockStmtAST>(statements);
 }
 
 // numberexp ::= number

@@ -15,6 +15,7 @@ public:
   std::vector<std::unique_ptr<StmtAST>> parse();
   std::unique_ptr<StmtAST> parseDeclaration();
   std::unique_ptr<StmtAST> parseStatement();
+  std::unique_ptr<StmtAST> parseBlock();
   std::unique_ptr<ExprAST> parseLiteralExpr();
   std::unique_ptr<ExprAST> parseParenExpr();
   std::unique_ptr<ExprAST> parseIdentifierExpr();

@@ -63,6 +63,8 @@ Token Lexer::getToken2() {
     if(match(',')) return Token(Atom::COMMA);
     if(match('(')) return Token(Atom::PAREN_OPEN);
     if(match(')')) return Token(Atom::PAREN_CLOSE);
+    if(match('{')) return Token(Atom::BLOCK_OPEN);
+    if(match('}')) return Token(Atom::BLOCK_CLOSE);
     if(match(';')) return Token(Atom::END_STATEMENT);
 
     // Identifiers start with a letter or '_'
