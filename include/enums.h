@@ -17,6 +17,7 @@ enum class Keyword {
   DEFINE, 
   EXTERN,
   MAYBE, 
+  CRASH, 
   PRINT,
   SET,
   IF,

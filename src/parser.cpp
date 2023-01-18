@@ -10,6 +10,7 @@
 #include "ast/stmt/blockStmtAST.h"
 #include "ast/stmt/conditionalStmtAST.h"
 #include "ast/stmt/maybeStmtAST.h"
+#include "ast/stmt/crashStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -86,6 +87,11 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
   
   if(match(Token(Keyword::IF))) {
       return parseConditional();
+  }
+
+  if(match(Token(Keyword::CRASH))) {
+    expect(Token(Atom::END_STATEMENT));
+    return std::make_unique<CrashStmtAST>();
   }
 
   if(match(Token(Keyword::MAYBE))) {
