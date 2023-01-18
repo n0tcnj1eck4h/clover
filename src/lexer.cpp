@@ -74,12 +74,13 @@ Token Lexer::getToken2() {
             temp += get();
         }
 
-        if(temp == "set")    return Token(Keyword::SET);
         // if(temp == "def")    return Token(Keyword::DEFINE);
         // if(temp == "extern") return Token(Keyword::EXTERN);
-        if(temp == "print")  return Token(Keyword::PRINT);
-        if(temp == "if")     return Token(Keyword::IF);
-        if(temp == "else")   return Token(Keyword::ELSE);
+        if(temp == "if")    return Token(Keyword::IF);
+        if(temp == "set")   return Token(Keyword::SET);
+        if(temp == "else")  return Token(Keyword::ELSE);
+        if(temp == "print") return Token(Keyword::PRINT);
+        if(temp == "maybe") return Token(Keyword::MAYBE);
 
         return Token(Token::Identifier(temp));
     }

@@ -16,6 +16,7 @@ enum class Operator {
 enum class Keyword { 
   DEFINE, 
   EXTERN,
+  MAYBE, 
   PRINT,
   SET,
   IF,

@@ -6,6 +6,7 @@
 #include "value.h"
 #include "ANSI-color-codes.h"
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <sstream>
 #include <string>
@@ -14,6 +15,7 @@
 #include <iostream>
 
 int main(int argc, const char **argv) {
+  srand(time(nullptr));
 
   // Assert proper usage
   if(argc > 2) {

@@ -9,6 +9,7 @@
 #include "ast/stmt/exprStmtAST.h"
 #include "ast/stmt/blockStmtAST.h"
 #include "ast/stmt/conditionalStmtAST.h"
+#include "ast/stmt/maybeStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -85,6 +86,11 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
   
   if(match(Token(Keyword::IF))) {
       return parseConditional();
+  }
+
+  if(match(Token(Keyword::MAYBE))) {
+      auto stmt = parseStatement();
+      return std::make_unique<MaybeStmtAST>(stmt);
   }
 
   auto expr = parseExpression();
