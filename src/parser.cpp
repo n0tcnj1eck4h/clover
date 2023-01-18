@@ -6,6 +6,7 @@
 #include "ast/expr/variableExprAST.h"
 #include "ast/stmt/printStmtAST.h"
 #include "ast/stmt/vardeclStmtAST.h"
+#include "ast/stmt/exprStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -46,7 +47,7 @@ Token &Parser::getNextToken() {
 
 std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
   std::vector<std::unique_ptr<StmtAST>> statements;
-  while(m_current_token.getType() == Token::Type::Keyword) {
+  while(m_current_token.getType() != Token::Type::EndOfFile) {
     statements.push_back(parseDeclaration());
   }
 
@@ -54,7 +55,7 @@ std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
 }
 
 std::unique_ptr<StmtAST> Parser::parseDeclaration() {
-  if(match(Token(Keyword::VAR))) {
+  if(match(Token(Keyword::SET))) {
     std::unique_ptr<ExprAST> e;
     std::string identifier = m_current_token.get<Token::Identifier>();
     getNextToken();
@@ -77,7 +78,10 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
     return std::make_unique<PrintStmtAST>(expr);
   }
 
-  throw UnexpectedTokenException(m_current_token, "Statement");
+  auto expr = parseExpression();
+  expect(Token(Atom::END_STATEMENT));
+
+  return std::make_unique<ExprStmtAST>(expr);
 }
 
 // numberexp ::= number

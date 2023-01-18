@@ -17,7 +17,7 @@ enum class Keyword {
   DEFINE, 
   EXTERN,
   PRINT,
-  VAR
+  SET
 };
 
 enum class Atom {

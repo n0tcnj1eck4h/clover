@@ -72,7 +72,7 @@ Token Lexer::getToken2() {
             temp += get();
         }
 
-        if(temp == "var")    return Token(Keyword::VAR);
+        if(temp == "set")    return Token(Keyword::SET);
         // if(temp == "def")    return Token(Keyword::DEFINE);
         // if(temp == "extern") return Token(Keyword::EXTERN);
         if(temp == "print")  return Token(Keyword::PRINT);

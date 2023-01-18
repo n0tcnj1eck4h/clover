@@ -61,9 +61,7 @@ int main(int argc, const char **argv) {
         break;
       }
       std::cerr << e.what() << std::endl;
-    } catch(std::exception& e) {
-      std::cerr << e.what() << std::endl;
-    }
+    } 
   } while (false); // TODO
 
   // // Enter REPL mode if no arguments were passed
