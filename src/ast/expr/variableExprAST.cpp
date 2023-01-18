@@ -1,4 +1,4 @@
-#include "ast/variableExprAST.h"
+#include "ast/expr/variableExprAST.h"
 #include "sstream"
 
 VariableExprAST::VariableExprAST(const std::string& name) : m_name(name) {}

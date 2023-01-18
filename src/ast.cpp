@@ -1,5 +1,5 @@
 #include <sstream>
-#include "ast/AST.h"
+#include "ast/ast.h"
 
 ASTNode::~ASTNode() {}
 ExprAST::~ExprAST() {}

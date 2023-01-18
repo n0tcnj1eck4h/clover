@@ -1,5 +1,5 @@
 #pragma once
-#include "ast/AST.h"
+#include "ast/ast.h"
 
 class BinaryOpExprAST : public ExprAST {
 	Operator m_operator;

@@ -16,7 +16,7 @@ class ASTNode {
 class StmtAST : public ASTNode {
 	public:
 		virtual ~StmtAST();
-		virtual void evaluate() = 0;
+		virtual void execute() = 0;
 };
 
 class ExprAST : public ASTNode {

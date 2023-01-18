@@ -30,8 +30,14 @@ int main(int argc, const char **argv) {
     
     Lexer lexer(script);
     Parser parser(lexer);
-    auto expr = parser.parsePrimary();
-    std::cout << expr->evaluate().toString() << std::endl;
+    auto statements = parser.parse();
+    try {
+      for(auto& s : statements)
+        s->execute();
+      }
+    catch (std::exception& e) {
+      std::cerr << e.what();
+    }
     exit(EX_OK);
   }
 
@@ -44,7 +50,7 @@ int main(int argc, const char **argv) {
       Parser parser(lexer);
       auto statements = parser.parse();
       for(auto& s : statements) {
-        s->evaluate();
+        s->execute();
       }
     } catch(UnexpectedTokenException& e) {
       if(e.getToken().getType() == Token::Type::EndOfFile) {

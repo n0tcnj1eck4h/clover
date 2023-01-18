@@ -1,13 +1,12 @@
-#include "ast/printStmtAST.h"
-#include "ast/AST.h"
+#include "ast/stmt/printStmtAST.h"
 #include <memory>
 #include <iostream>
 #include <sstream>
 
 PrintStmtAST::PrintStmtAST(std::unique_ptr<ExprAST>& expr) : m_expr(std::move(expr)) {}
 
-void PrintStmtAST::evaluate() {
-  std::cout << m_expr -> evaluate() . toString();
+void PrintStmtAST::execute() {
+  std::cout << m_expr -> evaluate() . toString() << std::endl;
 }
 
 std::string PrintStmtAST::toString() {

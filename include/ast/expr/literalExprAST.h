@@ -1,5 +1,5 @@
 #pragma once
-#include "ast/AST.h"
+#include "ast/ast.h"
 
 class LiteralAST : public ExprAST {
 	Value m_value;

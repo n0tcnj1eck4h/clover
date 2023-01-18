@@ -1,10 +1,10 @@
 #include "parser.h"
-#include "ast/AST.h"
-#include "ast/literalExprAST.h"
-#include "ast/binopExprAST.h"
-#include "ast/callExprAST.h"
-#include "ast/variableExprAST.h"
-#include "ast/printStmtAST.h"
+#include "ast/ast.h"
+#include "ast/expr/literalExprAST.h"
+#include "ast/expr/binopExprAST.h"
+#include "ast/expr/callExprAST.h"
+#include "ast/expr/variableExprAST.h"
+#include "ast/stmt/printStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -45,7 +45,7 @@ Token &Parser::getNextToken() {
 
 std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
   std::vector<std::unique_ptr<StmtAST>> statements;
-  while(m_current_token.getType() != Token::Type::EndOfFile) {
+  while(m_current_token.getType() == Token::Type::Keyword) {
     statements.push_back(parseStatement());
   }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "ast/AST.h"
+#include "ast/ast.h"
 
 class VariableExprAST : public ExprAST {
 	std::string m_name;
