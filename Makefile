@@ -20,8 +20,8 @@ run: interpreter
 
 clean:
 	$(RM) interpreter
-	$(RM) obj/**.o
-	$(RM) deps/**.d
+	$(RM) `find obj -type f -name '*.o'`
+	$(RM) `find deps -type f -name '*.d'`
 
 obj/%.o: src/%.cpp deps/%.d
 	$(CXX) $(CPPFLAGS) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
