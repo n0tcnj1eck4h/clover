@@ -4,6 +4,7 @@
 #include <istream>
 #include <limits>
 #include <string>
+#include "errors.h"
 #include "lexer.h"
 #include "token.h"
 
@@ -62,6 +63,7 @@ Token Lexer::getToken2() {
     if(match(',')) return Token(Atom::COMMA);
     if(match('(')) return Token(Atom::PAREN_OPEN);
     if(match(')')) return Token(Atom::PAREN_CLOSE);
+    if(match(';')) return Token(Atom::END_STATEMENT);
 
     // Identifiers start with a letter or '_'
     if(std::isalpha(peek()) || peek() == '_') {
@@ -108,10 +110,7 @@ Token Lexer::getToken2() {
         return Token(Token::Literal((f64)integer + decimal));
     }
 
-    // TODO
     std::string temp;
     stream >> temp;
-    std::cout << "Unexpected string reached: " << temp << std::endl; 
-
-	throw std::exception();
+	throw UnexpectedStringException(temp);
 }

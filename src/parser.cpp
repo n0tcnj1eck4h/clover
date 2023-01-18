@@ -1,9 +1,10 @@
 #include "parser.h"
 #include "ast/AST.h"
-#include "ast/literalAST.h"
-#include "ast/binopAST.h"
-#include "ast/callAST.h"
-#include "ast/variableAST.h"
+#include "ast/literalExprAST.h"
+#include "ast/binopExprAST.h"
+#include "ast/callExprAST.h"
+#include "ast/variableExprAST.h"
+#include "ast/printStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -44,7 +45,7 @@ Token &Parser::getNextToken() {
 
 std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
   std::vector<std::unique_ptr<StmtAST>> statements;
-  while(m_current_token != Token()) {
+  while(m_current_token.getType() != Token::Type::EndOfFile) {
     statements.push_back(parseStatement());
   }
 
@@ -52,11 +53,13 @@ std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
 }
 
 std::unique_ptr<StmtAST> Parser::parseStatement() {
- if(match(Token(Keyword::PRINT))) {
+  if(match(Token(Keyword::PRINT))) {
+    auto expr = parsePrimary();
+    expect(Token(Atom::END_STATEMENT));
+    return std::make_unique<PrintStmtAST>(expr);
+  }
 
- }
-
- throw UnexpectedTokenException(m_current_token, "Statement");
+  throw UnexpectedTokenException(m_current_token, "Statement");
 }
 
 // numberexp ::= number

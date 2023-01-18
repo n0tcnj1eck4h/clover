@@ -39,16 +39,13 @@ int main(int argc, const char **argv) {
   std::cout << "// TODO: Insert a cool header here" << std::endl;
   do {
     std::cout << "> ";  
-
-    std::string temp;
-    std::getline(std::cin, temp);
-    std::stringstream ss(temp);
-    Lexer lexer(ss);
-    Parser parser(lexer);
-
     try {
-      auto expr = parser.parseExpression();
-      std::cout << expr->evaluate().toString() << std::endl;
+      Lexer lexer(std::cin);
+      Parser parser(lexer);
+      auto statements = parser.parse();
+      for(auto& s : statements) {
+        s->evaluate();
+      }
     } catch(UnexpectedTokenException& e) {
       if(e.getToken().getType() == Token::Type::EndOfFile) {
         std::cout << "\no/\n";
@@ -58,7 +55,32 @@ int main(int argc, const char **argv) {
     } catch(std::exception& e) {
       std::cerr << e.what() << std::endl;
     }
-  } while (true);
+  } while (false); // TODO
+
+  // // Enter REPL mode if no arguments were passed
+  // std::cout << "// TODO: Insert a cool header here" << std::endl;
+  // do {
+  //   std::cout << "> ";  
+  //
+  //   std::string temp;
+  //   std::getline(std::cin, temp);
+  //   std::stringstream ss(temp);
+  //
+  //   try {
+  //     Lexer lexer(ss);
+  //     Parser parser(lexer);
+  //     auto expr = parser.parseExpression();
+  //     std::cout << expr->evaluate().toString() << std::endl;
+  //   } catch(UnexpectedTokenException& e) {
+  //     if(e.getToken().getType() == Token::Type::EndOfFile) {
+  //       std::cout << "\no/\n";
+  //       break;
+  //     }
+  //     std::cerr << e.what() << std::endl;
+  //   } catch(std::exception& e) {
+  //     std::cerr << e.what() << std::endl;
+  //   }
+  // } while (true);
 
   // do {
   //   std::cout << "> ";  

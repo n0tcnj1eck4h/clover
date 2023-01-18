@@ -23,5 +23,6 @@ enum class Keyword {
 enum class Atom {
   PAREN_OPEN,
   PAREN_CLOSE,
-  COMMA
+  COMMA,
+  END_STATEMENT
 };

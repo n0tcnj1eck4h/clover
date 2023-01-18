@@ -22,6 +22,14 @@ Token UnexpectedTokenException::getToken() const {
   return m_token;
 }
 
+UnexpectedStringException::UnexpectedStringException(std::string& string) : m_string(string) {
+  m_exception = (RED "Unexpected string of characters: ") + m_string + "\n" + CRESET;
+}
+
+const char* UnexpectedStringException::what() const noexcept {
+  return m_exception.c_str();
+}
+
 const char* TypeMismatchException::what() const noexcept {
   return "Type mismatch error";
 }
