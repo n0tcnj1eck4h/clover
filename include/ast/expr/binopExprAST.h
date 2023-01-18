@@ -9,5 +9,5 @@ class BinaryOpExprAST : public ExprAST {
 public:
 	BinaryOpExprAST(Operator op, std::unique_ptr<ExprAST>& lhs, std::unique_ptr<ExprAST>& rhs); 
 	virtual std::string toString() override;
-	virtual Value evaluate() override;
+	virtual Value evaluate(Environment& env) override;
 };

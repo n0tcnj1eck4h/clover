@@ -8,5 +8,5 @@ class CallExprAST : public ExprAST {
 public:
 	CallExprAST(std::string& callee, std::vector<std::unique_ptr<ExprAST>> args);
 	virtual std::string toString() override;
-	virtual Value evaluate() override;
+	virtual Value evaluate(Environment& env) override;
 };

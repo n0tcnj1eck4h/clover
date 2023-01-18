@@ -13,7 +13,7 @@ std::string Value::toString() const {
     case Type::STRING:
     {
       std::string data = std::get<std::string>(m_data);
-      return '"' + data + '"';
+      return data;
     }
     case Type::NIL:
       return "NIL";

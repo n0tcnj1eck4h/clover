@@ -5,24 +5,25 @@
 #include "types.h"
 #include "enums.h"
 #include "value.h"
+#include "environment.h"
 
 
 class ASTNode {
 	public:
 		virtual ~ASTNode();
-		virtual std::string toString() = 0;
+		virtual std::string toString();
 };
 
 class StmtAST : public ASTNode {
 	public:
 		virtual ~StmtAST();
-		virtual void execute() = 0;
+		virtual void execute(Environment& env) = 0;
 };
 
 class ExprAST : public ASTNode {
 	public:
 		virtual ~ExprAST();
-		virtual Value evaluate() = 0;
+		virtual Value evaluate(Environment& env) = 0;
 };
 
 

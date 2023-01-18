@@ -13,6 +13,6 @@ std::string CallExprAST::toString() {
     return ss.str();
 }
 
-Value CallExprAST::evaluate() {
+Value CallExprAST::evaluate(Environment& env) {
     return Value(1.0);
 }

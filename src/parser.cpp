@@ -5,6 +5,7 @@
 #include "ast/expr/callExprAST.h"
 #include "ast/expr/variableExprAST.h"
 #include "ast/stmt/printStmtAST.h"
+#include "ast/stmt/vardeclStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -13,6 +14,9 @@
 #include <mutex>
 #include <utility>
 #include <variant>
+
+Parser::Parser(Lexer &lexer)
+    : m_lexer(lexer), m_current_token(lexer.getToken()){};
 
 void Parser::expect(const Token val) {
   if(m_current_token != val) {
@@ -35,9 +39,6 @@ bool Parser::match(const Token val) {
   return true;
 }
 
-Parser::Parser(Lexer &lexer)
-    : m_lexer(lexer), m_current_token(lexer.getToken()){};
-
 Token &Parser::getNextToken() {
   m_current_token = m_lexer.getToken();
   return m_current_token;
@@ -46,10 +47,27 @@ Token &Parser::getNextToken() {
 std::vector<std::unique_ptr<StmtAST>> Parser::parse() {
   std::vector<std::unique_ptr<StmtAST>> statements;
   while(m_current_token.getType() == Token::Type::Keyword) {
-    statements.push_back(parseStatement());
+    statements.push_back(parseDeclaration());
   }
 
   return statements;
+}
+
+std::unique_ptr<StmtAST> Parser::parseDeclaration() {
+  if(match(Token(Keyword::VAR))) {
+    std::unique_ptr<ExprAST> e;
+    std::string identifier = m_current_token.get<Token::Identifier>();
+    getNextToken();
+
+    if(match(Token(Operator::ASSIGN))) {
+      e = parseExpression();
+    }
+
+    expect(Token(Atom::END_STATEMENT));
+    return std::make_unique<VardeclStmtAST>(identifier, e);
+  }
+
+  return parseStatement();
 }
 
 std::unique_ptr<StmtAST> Parser::parseStatement() {
@@ -122,7 +140,7 @@ std::unique_ptr<ExprAST> Parser::parsePrimary() {
   case Token::Type::Atom:
     if (m_current_token == Token(Atom::PAREN_OPEN))
       return parseParenExpr();
-    else throw UnexpectedTokenException(m_current_token, "(");
+    else throw UnexpectedTokenException(m_current_token, "Expression");
 
   default:
     throw UnexpectedTokenException(m_current_token, "Expression");

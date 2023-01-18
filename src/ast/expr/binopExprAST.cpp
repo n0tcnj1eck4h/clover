@@ -10,24 +10,24 @@ std::string BinaryOpExprAST::toString() {
     return ss.str();
 }
 
-Value BinaryOpExprAST::evaluate() {
+Value BinaryOpExprAST::evaluate(Environment& env) {
     switch(m_operator) {
         case Operator::EQ:
-            return Value(m_lhs -> evaluate() == m_rhs -> evaluate() ? 1.0 : 0.0);
+            return Value(m_lhs -> evaluate(env) == m_rhs -> evaluate(env) ? 1.0 : 0.0);
         case Operator::NEQ:
-            return Value(m_lhs -> evaluate() != m_rhs -> evaluate() ? 1.0 : 0.0);
+            return Value(m_lhs -> evaluate(env) != m_rhs -> evaluate(env) ? 1.0 : 0.0);
         case Operator::ADD:
-            return Value(m_lhs -> evaluate() + m_rhs -> evaluate());
+            return Value(m_lhs -> evaluate(env) + m_rhs -> evaluate(env));
         case Operator::SUB:
-            return Value(m_lhs -> evaluate() - m_rhs -> evaluate());
+            return Value(m_lhs -> evaluate(env) - m_rhs -> evaluate(env));
         case Operator::MUL:
-            return Value(m_lhs -> evaluate() * m_rhs -> evaluate());
+            return Value(m_lhs -> evaluate(env) * m_rhs -> evaluate(env));
         case Operator::DIV:
-            return Value(m_lhs -> evaluate() / m_rhs -> evaluate());
+            return Value(m_lhs -> evaluate(env) / m_rhs -> evaluate(env));
         case Operator::DIV_FLR:
-            return Value(m_lhs -> evaluate().divFloor(m_rhs -> evaluate()));
+            return Value(m_lhs -> evaluate(env).divFloor(m_rhs -> evaluate(env)));
         case Operator::POW:
-            return Value(m_lhs -> evaluate().power(m_rhs -> evaluate()));
+            return Value(m_lhs -> evaluate(env).power(m_rhs -> evaluate(env)));
         default:
             return Value();
     }

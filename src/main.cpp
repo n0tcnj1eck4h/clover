@@ -1,3 +1,4 @@
+#include "environment.h"
 #include "errors.h"
 #include "lexer.h"
 #include "parser.h"
@@ -30,10 +31,11 @@ int main(int argc, const char **argv) {
     
     Lexer lexer(script);
     Parser parser(lexer);
+    Environment env;
     auto statements = parser.parse();
     try {
       for(auto& s : statements)
-        s->execute();
+        s->execute(env);
       }
     catch (std::exception& e) {
       std::cerr << e.what();
@@ -43,6 +45,7 @@ int main(int argc, const char **argv) {
 
   // Enter REPL mode if no arguments were passed
   std::cout << "// TODO: Insert a cool header here" << std::endl;
+  Environment env;
   do {
     std::cout << "> ";  
     try {
@@ -50,7 +53,7 @@ int main(int argc, const char **argv) {
       Parser parser(lexer);
       auto statements = parser.parse();
       for(auto& s : statements) {
-        s->execute();
+        s->execute(env);
       }
     } catch(UnexpectedTokenException& e) {
       if(e.getToken().getType() == Token::Type::EndOfFile) {

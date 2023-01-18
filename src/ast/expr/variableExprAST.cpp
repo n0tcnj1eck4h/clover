@@ -7,6 +7,6 @@ std::string VariableExprAST::toString() {
     return "$" + m_name;
 }
 
-Value VariableExprAST::evaluate() {
-    return Value(1.0);
+Value VariableExprAST::evaluate(Environment& env) {
+    return env.getValue(m_name);
 }

@@ -5,6 +5,10 @@ ASTNode::~ASTNode() {}
 ExprAST::~ExprAST() {}
 StmtAST::~StmtAST() {}
 
+std::string ASTNode::toString() {
+    return "ASTNode::toString() missing implementation";
+}
+
 PrototypeAST::PrototypeAST(std::string& name, std::vector<std::string>& args)
     : m_name(name), m_args(std::move(args)) {}
 

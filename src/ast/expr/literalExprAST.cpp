@@ -7,6 +7,6 @@ std::string LiteralAST::toString() {
     return m_value.toString();
 }
 
-Value LiteralAST::evaluate() {
+Value LiteralAST::evaluate(Environment& env) {
     return m_value;
 }
