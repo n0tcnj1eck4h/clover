@@ -9,4 +9,5 @@ while i < 20 {
   set y = x + y;
   set x = t;
   set i = i + 1;
+  #maybe maybe crash;
 }

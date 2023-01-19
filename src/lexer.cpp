@@ -83,6 +83,7 @@ Token Lexer::getToken2() {
         if(temp == "while") return Token(Keyword::WHILE);
         if(temp == "print") return Token(Keyword::PRINT);
         if(temp == "maybe") return Token(Keyword::MAYBE);
+        if(temp == "input") return Token(Keyword::INPUT);
 
         return Token(Token::Identifier(temp));
     }

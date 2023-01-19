@@ -12,6 +12,7 @@
 #include "ast/stmt/maybeStmtAST.h"
 #include "ast/stmt/crashStmtAST.h"
 #include "ast/stmt/whileStmtAST.h"
+#include "ast/expr/inputExprAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -195,6 +196,13 @@ std::unique_ptr<ExprAST> Parser::parsePrimary() {
       return parseParenExpr();
     else throw UnexpectedTokenException(m_current_token, "Expression");
 
+  case Token::Type::Keyword:
+    if (m_current_token == Token(Keyword::INPUT)) {
+        getNextToken();
+        return std::make_unique<InputExprAST>();
+    }
+    else throw UnexpectedTokenException(m_current_token, "Expression");
+
   default:
     throw UnexpectedTokenException(m_current_token, "Expression");
   }
@@ -277,7 +285,11 @@ i32 Parser::getOperatorPrecedence(Operator op) {
     case Operator::GTQ:
     case Operator::LESS:
     case Operator::LTQ:
-      return 10;
+      return 5;
+
+    case Operator::OR:
+    case Operator::AND:
+      return 1;
 
     case Operator::ASSIGN:
       return 0;

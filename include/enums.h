@@ -14,9 +14,10 @@ enum class Operator {
 };
 
 enum class Keyword { 
-  DEFINE, 
-  EXTERN,
+  // DEFINE, 
+  // EXTERN,
   MAYBE, 
+  INPUT,
   CRASH, 
   WHILE,
   PRINT,
