@@ -262,6 +262,18 @@ i32 Parser::getOperatorPrecedence(Operator op) {
 
     case Operator::POW:
       return 30;
+
+    case Operator::EQ:
+      return 10;
+
+    case Operator::GTR:
+    case Operator::GTQ:
+    case Operator::LESS:
+    case Operator::LTQ:
+      return 10;
+
+    case Operator::ASSIGN:
+      return 0;
     
     default:
       return -1;

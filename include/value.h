@@ -15,8 +15,15 @@ class Value {
     };
 
     Value(const Variant& data = std::monostate());
+    //Value(bool boolean);
     inline Type getType() const { return (Type)m_data.index(); }
     bool operator==(const Value& v) const;
+    bool operator<(const Value& v) const;
+    bool operator>(const Value& v) const;
+    bool operator<=(const Value& v) const;
+    bool operator>=(const Value& v) const;
+    bool operator&&(const Value& v) const;
+    bool operator||(const Value& v) const;
     Value operator+(const Value& v) const;
     Value operator-(const Value& v) const;
     Value operator*(const Value& v) const;
