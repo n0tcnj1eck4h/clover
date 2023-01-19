@@ -7,8 +7,8 @@ class Environment {
   Environment* m_parent;
 public:
   Environment(Environment* parent = nullptr);
-  void declareVariable(std::string name, Value v = Value());
-  void assignVariable(std::string name, Value v);
+  bool declareVariable(std::string name, Value v = Value());
+  //void assignVariable(std::string name, Value v);
   bool hasVariable(const std::string& name) const;
   Value getValue(std::string name);
 };

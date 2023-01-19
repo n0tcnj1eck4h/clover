@@ -80,6 +80,7 @@ Token Lexer::getToken2() {
         if(temp == "set")   return Token(Keyword::SET);
         if(temp == "else")  return Token(Keyword::ELSE);
         if(temp == "crash") return Token(Keyword::CRASH);
+        if(temp == "while") return Token(Keyword::WHILE);
         if(temp == "print") return Token(Keyword::PRINT);
         if(temp == "maybe") return Token(Keyword::MAYBE);
 

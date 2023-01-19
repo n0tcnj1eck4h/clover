@@ -11,6 +11,7 @@
 #include "ast/stmt/conditionalStmtAST.h"
 #include "ast/stmt/maybeStmtAST.h"
 #include "ast/stmt/crashStmtAST.h"
+#include "ast/stmt/whileStmtAST.h"
 #include "enums.h"
 #include "token.h"
 #include "errors.h"
@@ -87,6 +88,12 @@ std::unique_ptr<StmtAST> Parser::parseStatement() {
   
   if(match(Token(Keyword::IF))) {
       return parseConditional();
+  }
+  
+  if(match(Token(Keyword::WHILE))) {
+      auto condition = parseExpression();
+      auto body = parseStatement();
+      return std::make_unique<WhileStmtAST>(body, condition);
   }
 
   if(match(Token(Keyword::CRASH))) {
