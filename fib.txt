@@ -1,0 +1,12 @@
+set x = 1;
+set y = 1;
+
+print x;
+set i = 0;
+while i < 20 {
+  print y;
+  set t = y;
+  set y = x + y;
+  set x = t;
+  set i = i + 1;
+}
